@@ -1,0 +1,8 @@
+# kustomization.yaml
+resources:
+  - cluster.yaml
+  - common.yaml
+  - crds.yaml
+  - csi-operator.yaml
+  - operator.yaml
+  - toolbox.yaml
