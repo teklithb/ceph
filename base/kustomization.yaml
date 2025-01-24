@@ -1,8 +1,8 @@
 # kustomization.yaml
 resources:
-  - cluster.yaml
-  - common.yaml
-  - crds.yaml
-  - csi-operator.yaml
-  - operator.yaml
-  - toolbox.yaml
+  - crds.yaml       # Install CRDs first
+  - common.yaml     # Common configuration second
+  - operator.yaml   # Deploy the operator
+  - csi-operator.yaml # Deploy CSI operator
+  - cluster.yaml    # Deploy the Ceph cluster
+  - toolbox.yaml    # Deploy the toolbox
