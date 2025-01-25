@@ -10,7 +10,7 @@ spec:
     allowUnsupported: false
   dataDirHostPath: /var/lib/rook
   mon:
-    # Number of monitor nodes (recommended: 3)
+    # Number of monitor nodes
     count: 3
     allowMultiplePerNode: false
   mgr:
@@ -38,7 +38,6 @@ spec:
         enabled: false
       requireMsgr2: false
   storage:
-    # Automatically detect storage nodes and devices
     useAllNodes: true
     useAllDevices: true
     config:
@@ -57,7 +56,7 @@ spec:
           effect: "NoSchedule"
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 50
+          - weight: 1  # Relaxed to allow better scheduling
             podAffinityTerm:
               topologyKey: "kubernetes.io/hostname"
               labelSelector:
@@ -72,6 +71,7 @@ spec:
                   values:
                     - worker-node-1
                     - worker-node-2
+                    - master-node  # Allow scheduling on the master node
   disruptionManagement:
     managePodBudgets: true
     osdMaintenanceTimeout: 30
