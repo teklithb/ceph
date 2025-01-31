@@ -1,0 +1,86 @@
+# Namespace Definition
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: coder
+---
+# ConfigMap for Coder Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coder-config
+  namespace: coder
+data:
+  coder-config.yaml: |
+    bind-addr: 0.0.0.0:8080
+    auth: password
+    password: "test"  # Password for Coder, same as JupyterHub
+    log: info
+  username: test  # Username for Coder
+  password: test  # Password for Coder
+---
+# Deployment for Coder
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coder
+  namespace: coder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coder
+  template:
+    metadata:
+      labels:
+        app: coder
+    spec:
+      containers:
+      - name: coder
+        image: ghcr.io/coder/code-server:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: coder-config-volume
+          mountPath: /etc/coder/config.yaml
+          subPath: coder-config.yaml
+        command:
+        - sh
+        - -c
+        - |
+          echo "Starting Coder..."
+          code-server --config /etc/coder/config.yaml
+      volumes:
+      - name: coder-config-volume
+        configMap:
+          name: coder-config
+---
+# Service for Coder
+apiVersion: v1
+kind: Service
+metadata:
+  name: coder-service
+  namespace: coder
+spec:
+  selector:
+    app: coder
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30009
+  type: NodePort
+---
+# Persistent Volume for Shared Storage (Optional, if needed)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: coder-pvc
+  namespace: coder
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: rook-cephfs

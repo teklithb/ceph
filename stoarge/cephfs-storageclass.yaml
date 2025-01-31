@@ -1,0 +1,32 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-cephfs
+provisioner: rook-ceph.cephfs.csi.ceph.com
+parameters:
+  # Namespace where your Rook-Ceph cluster is running:
+  clusterID: rook-ceph
+
+  # The CephFilesystem CR name:
+  fsName: myfs
+
+  # Must match the data pool name in your CephFilesystem spec (currently "replicated", not "myfs-replicated")
+  pool: myfs-replicated
+
+  # -- IMPORTANT: CSI secret references (created by Rook operator) --
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+
+  # Whether volumes are dynamically created
+  # (Rook automatically manages subvolumes in CephFS)
+  dynamicProvisioning: "true"
+
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+mountOptions:
+  - debug
+volumeBindingMode: Immediate

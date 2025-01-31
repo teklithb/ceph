@@ -6,3 +6,4 @@ resources:
   - csi-operator.yaml # Deploy CSI operator
   - cluster.yaml    # Deploy the Ceph cluster
   - toolbox.yaml    # Deploy the toolbox
+  - filesystem.yaml # Deploy the filesystem

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+  namespace: rook-ceph
+spec:
+  storageClassName: rook-cephfs
+  accessModes:
+    - ReadWriteMany  # CephFS is ideal for shared RW access
+  resources:
+    requests:
+      storage: 10Gi
