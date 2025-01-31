@@ -7,3 +7,4 @@ resources:
   - cluster.yaml    # Deploy the Ceph cluster
   - toolbox.yaml    # Deploy the toolbox
   - filesystem.yaml # Deploy the filesystem
+  - dashboard-external-https.yaml # Deploy the dashboard
